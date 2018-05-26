@@ -1,0 +1,15 @@
+{
+  "name": "noger-ui",
+  "version": "1.0.12",
+  "description": "Ui for rest Api only compatible with noger",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["noger-ui", "noger", "express", "api", "documentation", "testing", "ui", "json", "rest"],
+  "author": "Param Aishwarya Vikram",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1"
+  }
+}

@@ -1,0 +1,72 @@
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon glyphicon-tree-deciduous"></span>
+                Noger
+            </a>
+
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/noger-ui">Get</a>
+                </li>
+                <li>
+                    <a href="/noger-ui/post">Post</a>
+                </li>
+                <li>
+                    <a href="/noger-ui/put">Put</a>
+                </li>
+                <li>
+                    <a href="/noger-ui/delete">Delete</a>
+                </li>
+            </ul>
+
+
+        </div>
+
+
+        <button class="btn btn-warning pull-right" data-toggle="modal" data-target="#myModal">Json Access Token
+            <span id="lock" class="glyphicon"></span>
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content" id="modal">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Json Web Token</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="access-token" placeholder="Bearer xxxxxxxx...">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" onclick="addingToken()">Add</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+<style>
+    .btn {
+        margin-top: .6%;
+    }
+</style>
+
+<script>
+    function addingToken() {
+            localStorage.setItem('token', document.getElementById('access-token').value);
+            document.getElementById('lock').className += ' glyphicon-lock';
+            $("#modal .close").click()
+        }
+
+        if (localStorage.getItem('token') != null) {
+            document.getElementById('lock').className += ' glyphicon-lock';
+        }
+</script>

@@ -1,0 +1,99 @@
+<html lang="en">
+
+<head>
+    <% include ./head %>
+        <style>
+            textarea {
+                resize: vertical;
+            }
+
+            .btn {
+                margin-bottom: 2%;
+            }
+
+            .btn-submit {
+                margin-top: 2%;
+                width: 100%;
+            }
+        </style>
+</head>
+
+<body class="container">
+
+    <header>
+        <% include ./header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+            <h1>Get Routes</h1>
+            <ul>
+                <% noger.type.forEach(function(type, index) { %>
+                    <% if(type == 'get') { %>
+                        <li>
+                            <button class="btn btn-info head-btn" data-toggle="collapse" data-target="#demo<%= index %>">
+                                <%= noger.path[index] %>
+                            </button>
+                            <div id="demo<%= index %>" class="collapse">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label for="header">Header:</label>
+                                            <textarea class="form-control" rows="5" id="header<%= index %>"></textarea>
+                                            <button class="btn btn-success btn-submit pull-right" onclick="submitGet('<%= index %>', '<%= noger.path[index] %>', '<%= port %>')">Submit</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label for="output">Output:</label>
+                                            <textarea class="form-control" rows="7" id="output<%= index %>" disabled>
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <% }}); %>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <% include ./footer %>
+    </footer>
+
+    <script>
+        function submitGet(index, api, port) {
+            let headerData = document.getElementById('header' + index).value;
+            if (headerData == null || headerData == undefined || headerData == '') {
+                var jsonHeaderData = {};
+            }
+            else {
+                var jsonHeaderData = JSON.parse(headerData);
+            }
+            jsonHeaderData["Authorization"] = localStorage.getItem('token')
+            $.ajax({
+                url: "http://localhost:" + port + "/" + api,
+                headers: jsonHeaderData,
+                method: 'GET',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log('succes: ' + data);
+                    let id = '#output' + index;
+                    var pretty = JSON.stringify(data, undefined, 4);
+                    $(id).text(pretty);
+                },
+                error: function (xhr,status,error) {
+                    let resultData = {
+                        statusCode: xhr.status,
+                        error: xhr.statusText,
+                        readyState: xhr.readyState
+                    }
+                    var pretty = JSON.stringify(resultData, undefined, 4);
+                    document.getElementById('output' + index).innerHTML = pretty;
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

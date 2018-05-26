@@ -1,0 +1,97 @@
+<html lang="en">
+
+<head>
+    <% include ./head %>
+</head>
+
+<body class="container">
+
+    <header>
+        <% include ./header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+            <h1 id='h1'>Delete Routes</h1>
+            <ul>
+                <% noger.type.forEach(function(type, index){ %>
+                    <%if (type =="delete") {%>
+                        <li>
+                            <button type="button" class="btn btn-danger head-btn" data-toggle="collapse" data-target="#demo<%= index %>">
+                                <%= noger.path[index]%>
+                            </button>
+                            <div id="demo<%= index %>" class="collapse">
+                                <form>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label for="comment">Header:</label>
+                                                <textarea class="form-control" rows="5" id="header<%= index %>"></textarea>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="comment">Body:</label>
+                                                <textarea class="form-control" rows="5" id="body<%= index %>"></textarea>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <label for="comment">output:</label>
+                                                <textarea disabled class="form-control" rows="10" id="output<%= index %>"></textarea>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div>
+                                            <button type="button" class="btn btn-success" style="float:right" onclick="outputdata('<%= index %>','<%= noger.path[index]%>','<%= port %>')">submit</button>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </li>
+                        <%}});%>
+            </ul>
+        </div>
+    </main>
+    <footer>
+        <% include ./footer %>
+    </footer>
+    <script>
+        function outputdata(id, api, port) {
+            let headerData = document.getElementById('header' + id).value;
+            if (headerData == null || headerData == undefined || headerData == '') {
+                var jsonHeaderData = {};
+            }
+            else {
+                var jsonHeaderData = JSON.parse(headerData);
+            }
+            jsonHeaderData["Authorization"] = localStorage.getItem('token');
+            // console.log(jsonHeaderData);
+            let body = document.getElementById("body" + id).value;
+            // if(body== null || body == undefined || body == ''){
+            //     alert("Enter the data in body");
+            // }
+            // else{
+            $.ajax({
+                type: "DELETE",
+                headers: jsonHeaderData,
+                url: "http://localhost:" + port + "/" + api,
+                data: body,
+                contentType: 'application/json',
+                success: function (resultData) {
+                    var pretty = JSON.stringify(resultData, undefined, 4);
+                    document.getElementById('output' + id).innerHTML = pretty;
+                },
+                error: function (xhr,status,error) {
+                    let resultData = {
+                        statusCode: xhr.status,
+                        error: xhr.statusText,
+                        readyState: xhr.readyState
+                    }
+                    var pretty = JSON.stringify(resultData, undefined, 4);
+                    document.getElementById('output' + id).innerHTML = pretty;
+                }
+            });
+        // }
+        }
+    </script>
+</body>
+
+</html>
